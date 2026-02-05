@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Sistema de Préstamos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <h2 class="text-center mb-4">💰 Calculadora de Préstamos</h2>
+        <div class="card shadow-sm p-4">
+            <div class="mb-3">
+                <label class="form-label">Monto del Préstamo ($)</label>
+                <input type="number" id="monto" class="form-control form-control-lg" placeholder="Ej: 1000">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tasa Anual (%)</label>
+                <input type="number" id="tasa" class="form-control form-control-lg" placeholder="Ej: 12">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Plazo (Meses)</label>
+                <input type="number" id="meses" class="form-control form-control-lg" placeholder="Ej: 6">
+            </div>
+            <button onclick="calcular()" class="btn btn-primary btn-lg w-100">Calcular Cuota</button>
+            
+            <div id="resultado" class="mt-4 text-center d-none">
+                <div class="alert alert-success">
+                    <h4>Cuota Mensual: <span id="cuota_valor"></span></h4>
+                    <p>Total a pagar: <span id="total_valor"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function calcular() {
+            const datos = {
+                monto: document.getElementById('monto').value,
+                tasa: document.getElementById('tasa').value,
+                meses: document.getElementById('meses').value
+            };
+            const response = await fetch('/calcular', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(datos)
+            });
+            const res = await response.json();
+            document.getElementById('cuota_valor').innerText = '$' + res.cuota;
+            document.getElementById('total_valor').innerText = '$' + res.total;
+            document.getElementById('resultado').classList.remove('d-none');
+        }
+    </script>
+</body>
+</html>
